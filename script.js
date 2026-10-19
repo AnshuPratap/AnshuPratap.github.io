@@ -1,0 +1,13 @@
+const menuButton=document.querySelector('.menu-toggle');
+const nav=document.querySelector('.site-nav');
+menuButton.addEventListener('click',()=>{const open=menuButton.getAttribute('aria-expanded')==='true';menuButton.setAttribute('aria-expanded',String(!open));menuButton.setAttribute('aria-label',open?'Open navigation':'Close navigation');nav.classList.toggle('open',!open)});
+nav.querySelectorAll('a').forEach(link=>link.addEventListener('click',()=>{nav.classList.remove('open');menuButton.setAttribute('aria-expanded','false');menuButton.setAttribute('aria-label','Open navigation')}));
+const projectCards=[...document.querySelectorAll('.project-card')];
+document.querySelectorAll('[data-count]').forEach(counter=>{const category=counter.dataset.count;const count=category==='all'?projectCards.length:projectCards.filter(card=>card.dataset.category===category).length;counter.textContent=String(count).padStart(2,'0')});
+document.querySelectorAll('.filter-button').forEach(button=>button.addEventListener('click',()=>{const filter=button.dataset.filter;document.querySelectorAll('.filter-button').forEach(item=>{const active=item===button;item.classList.toggle('active',active);item.setAttribute('aria-pressed',String(active))});projectCards.forEach(card=>{card.hidden=filter!=='all'&&card.dataset.category!==filter})}));
+document.querySelector('#year').textContent=new Date().getFullYear();
+const progressBar=document.querySelector('.scroll-progress span');
+let progressQueued=false;
+const updateProgress=()=>{const scrollable=document.documentElement.scrollHeight-window.innerHeight;progressBar.style.transform=`scaleX(${scrollable>0?window.scrollY/scrollable:0})`;progressQueued=false};
+window.addEventListener('scroll',()=>{if(!progressQueued){progressQueued=true;window.requestAnimationFrame(updateProgress)}},{passive:true});
+updateProgress();
